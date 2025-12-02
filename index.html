@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Pretendard:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    /* ===== 전체 배경: 푸망처럼 부드러운 그라데이션 + 가운데 카드 ===== */
     * {
       box-sizing: border-box;
     }
@@ -169,7 +168,7 @@
       filter: brightness(0.98);
     }
 
-    /* 결과 박스 – 부드럽게 fade-in */
+    /* 결과 박스 */
     #resultBox {
       margin-top: 10px;
       padding: 12px 12px 12px;
@@ -221,6 +220,22 @@
     #characterText {
       margin: 8px 0 6px;
       color: #333;
+    }
+
+    .result-illustration {
+      margin-top: 8px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .result-illustration img {
+      max-width: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 0, 0, 0.18);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+      object-fit: contain;
+      background: #000; /* 그림 배경이 투명이니까 검은 캔버스 느낌 */
     }
 
     .trait-chips {
@@ -447,7 +462,13 @@
             <p id="characterTagline"></p>
           </div>
         </div>
+
         <p id="characterText"></p>
+
+        <div class="result-illustration">
+          <img id="characterImage" alt="Character illustration">
+        </div>
+
         <div id="characterTraits" class="trait-chips"></div>
       </div>
 
@@ -467,7 +488,8 @@
         tagline: "Truth-seeker caught inside his own riddle.",
         description:
           "Like Oedipus, you are drawn to the truth, even when it is dangerous or painful. In Greek tragedy, his determination to solve the riddle of Thebes reveals that he himself is the source of the city’s pollution, turning knowledge into catastrophe.",
-        traits: ["Truth-obsessed", "Self-inquiry", "Moral responsibility", "Refuses easy answers"]
+        traits: ["Truth-obsessed", "Self-inquiry", "Moral responsibility", "Refuses easy answers"],
+        image: "oedipus.png"
       },
       Agamemnon: {
         icon: "⚔️",
@@ -475,7 +497,8 @@
         tagline: "Duty first, even when the cost is unbearable.",
         description:
           "You think in terms of duty, sacrifice, and reputation. In myth, Agamemnon chooses war and honour over his own daughter’s life; this decision wins him kleos on the battlefield but destroys him within his own household.",
-        traits: ["Duty-driven", "Reputation-conscious", "Strategic but rigid", "Carries heavy burdens"]
+        traits: ["Duty-driven", "Reputation-conscious", "Strategic but rigid", "Carries heavy burdens"],
+        image: "agamennon.png"   // 파일 이름 그대로 사용!
       },
       Medea: {
         icon: "🔥",
@@ -483,7 +506,8 @@
         tagline: "Loyalty that turns volcanic when betrayed.",
         description:
           "Your loyalty runs deep, and so does your rage when that loyalty is betrayed. Medea’s metis, her cunning intelligence, allows her to punish Jason in ways that terrify both her enemies and the audience, exposing ancient anxieties about powerful women.",
-        traits: ["Intense loyalty", "Dangerous when wronged", "Metis (cunning intelligence)", "Emotionally uncompromising"]
+        traits: ["Intense loyalty", "Dangerous when wronged", "Metis (cunning intelligence)", "Emotionally uncompromising"],
+        image: "medea.png"
       },
       Odysseus: {
         icon: "🌊",
@@ -491,7 +515,8 @@
         tagline: "Shapeshifting survivor of every storm.",
         description:
           "You rely on metis: cleverness, flexibility, and survival instinct. Like Odysseus, you adapt to each situation with new identities and stories, but this constant strategy also complicates your nostos, your relationships, and how others remember you.",
-        traits: ["Adaptive", "Storyteller", "Survivor mindset", "Strategic ambiguity"]
+        traits: ["Adaptive", "Storyteller", "Survivor mindset", "Strategic ambiguity"],
+        image: "odysseus.png"
       }
     };
 
@@ -527,6 +552,7 @@
       const taglineP = document.getElementById('characterTagline');
       const textP = document.getElementById('characterText');
       const traitsDiv = document.getElementById('characterTraits');
+      const imgEl = document.getElementById('characterImage');
 
       const dataForChar = characterData[bestChar];
 
@@ -534,9 +560,15 @@
       nameP.textContent = `Your tragic match is: ${dataForChar.name}`;
       taglineP.textContent = dataForChar.tagline;
       textP.textContent = dataForChar.description;
+
       traitsDiv.innerHTML = dataForChar.traits
         .map(trait => `<span class="chip">${trait}</span>`)
         .join("");
+
+      if (imgEl && dataForChar.image) {
+        imgEl.src = dataForChar.image;
+        imgEl.alt = `${dataForChar.name} illustration`;
+      }
 
       resultBox.style.display = 'block';
       setTimeout(() => {
@@ -546,4 +578,5 @@
   </script>
 </body>
 </html>
+
 
