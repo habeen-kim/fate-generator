@@ -190,19 +190,54 @@
       transform: translateY(0);
     }
 
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .result-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
     #characterName {
       font-family: "Cinzel", "Times New Roman", serif;
       font-weight: 700;
       font-size: 0.95rem;
       letter-spacing: 0.04em;
-      margin-bottom: 4px;
+      margin: 0 0 2px;
       color: #8b2f2f;
       text-transform: uppercase;
     }
 
-    #characterText {
+    #characterTagline {
       margin: 0;
+      font-size: 0.8rem;
+      color: #7a3c3c;
+    }
+
+    #characterText {
+      margin: 8px 0 6px;
       color: #333;
+    }
+
+    .trait-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .trait-chips .chip {
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      background: rgba(139, 47, 47, 0.06);
+      border: 1px solid rgba(139, 47, 47, 0.3);
+      color: #6b2626;
+      white-space: nowrap;
     }
 
     .footer {
@@ -405,8 +440,15 @@
       </form>
 
       <div id="resultBox">
-        <p id="characterName"></p>
+        <div class="result-header">
+          <span id="characterIcon" class="result-icon"></span>
+          <div>
+            <p id="characterName"></p>
+            <p id="characterTagline"></p>
+          </div>
+        </div>
         <p id="characterText"></p>
+        <div id="characterTraits" class="trait-chips"></div>
       </div>
 
       <p class="footer">
@@ -418,11 +460,39 @@
   </div>
 
   <script>
-    const descriptions = {
-      'Oedipus': "You are OEDIPUS. Like Oedipus, you are drawn to the truth, even when it is dangerous or painful. In Greek tragedy, his determination to solve the riddle of Thebes reveals that he himself is the source of the city’s pollution, turning knowledge into catastrophe.",
-      'Agamemnon': "You are AGAMEMNON. You think in terms of duty, sacrifice, and reputation. In myth, Agamemnon chooses war and honour over his own daughter’s life; this decision wins him kleos on the battlefield but destroys him within his own household.",
-      'Medea': "You are MEDEA. Your loyalty runs deep, and so does your rage when that loyalty is betrayed. Medea’s metis, her cunning intelligence, allows her to punish Jason in ways that terrify both her enemies and the audience, exposing ancient anxieties about powerful women.",
-      'Odysseus': "You are ODYSSEUS. You rely on metis: cleverness, flexibility, and survival instinct. Like Odysseus, you adapt to each situation with new identities and stories, but this constant strategy also complicates your nostos, your relationships, and how others remember you."
+    const characterData = {
+      Oedipus: {
+        icon: "🧩",
+        name: "OEDIPUS",
+        tagline: "Truth-seeker caught inside his own riddle.",
+        description:
+          "Like Oedipus, you are drawn to the truth, even when it is dangerous or painful. In Greek tragedy, his determination to solve the riddle of Thebes reveals that he himself is the source of the city’s pollution, turning knowledge into catastrophe.",
+        traits: ["Truth-obsessed", "Self-inquiry", "Moral responsibility", "Refuses easy answers"]
+      },
+      Agamemnon: {
+        icon: "⚔️",
+        name: "AGAMEMNON",
+        tagline: "Duty first, even when the cost is unbearable.",
+        description:
+          "You think in terms of duty, sacrifice, and reputation. In myth, Agamemnon chooses war and honour over his own daughter’s life; this decision wins him kleos on the battlefield but destroys him within his own household.",
+        traits: ["Duty-driven", "Reputation-conscious", "Strategic but rigid", "Carries heavy burdens"]
+      },
+      Medea: {
+        icon: "🔥",
+        name: "MEDEA",
+        tagline: "Loyalty that turns volcanic when betrayed.",
+        description:
+          "Your loyalty runs deep, and so does your rage when that loyalty is betrayed. Medea’s metis, her cunning intelligence, allows her to punish Jason in ways that terrify both her enemies and the audience, exposing ancient anxieties about powerful women.",
+        traits: ["Intense loyalty", "Dangerous when wronged", "Metis (cunning intelligence)", "Emotionally uncompromising"]
+      },
+      Odysseus: {
+        icon: "🌊",
+        name: "ODYSSEUS",
+        tagline: "Shapeshifting survivor of every storm.",
+        description:
+          "You rely on metis: cleverness, flexibility, and survival instinct. Like Odysseus, you adapt to each situation with new identities and stories, but this constant strategy also complicates your nostos, your relationships, and how others remember you.",
+        traits: ["Adaptive", "Storyteller", "Survivor mindset", "Strategic ambiguity"]
+      }
     };
 
     function calculateFate() {
@@ -430,10 +500,10 @@
       const data = new FormData(form);
 
       const scores = {
-        'Oedipus': 0,
-        'Agamemnon': 0,
-        'Medea': 0,
-        'Odysseus': 0
+        Oedipus: 0,
+        Agamemnon: 0,
+        Medea: 0,
+        Odysseus: 0
       };
 
       for (const [, value] of data.entries()) {
@@ -452,14 +522,23 @@
       }
 
       const resultBox = document.getElementById('resultBox');
-      const nameSpan = document.getElementById('characterName');
+      const iconSpan = document.getElementById('characterIcon');
+      const nameP = document.getElementById('characterName');
+      const taglineP = document.getElementById('characterTagline');
       const textP = document.getElementById('characterText');
+      const traitsDiv = document.getElementById('characterTraits');
 
-      nameSpan.textContent = `Your tragic match is: ${bestChar}`;
-      textP.textContent = descriptions[bestChar];
+      const dataForChar = characterData[bestChar];
+
+      iconSpan.textContent = dataForChar.icon;
+      nameP.textContent = `Your tragic match is: ${dataForChar.name}`;
+      taglineP.textContent = dataForChar.tagline;
+      textP.textContent = dataForChar.description;
+      traitsDiv.innerHTML = dataForChar.traits
+        .map(trait => `<span class="chip">${trait}</span>`)
+        .join("");
 
       resultBox.style.display = 'block';
-      // fade-in
       setTimeout(() => {
         resultBox.classList.add('show');
       }, 10);
@@ -467,5 +546,4 @@
   </script>
 </body>
 </html>
-
 
