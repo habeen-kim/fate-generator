@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Pretendard:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    /* ===== 전체 배경: 푸망처럼 부드러운 그라데이션 + 가운데 카드 ===== */
     * {
       box-sizing: border-box;
     }
@@ -44,7 +43,6 @@
       overflow: hidden;
     }
 
-    /* 상단 작은 장식 라벨 */
     .pill-label {
       display: inline-flex;
       align-items: center;
@@ -81,7 +79,6 @@
       color: #383d8c;
     }
 
-    /* 질문 컨테이너 (스크롤 가능 영역) */
     .question-scroll {
       max-height: 420px;
       overflow-y: auto;
@@ -89,7 +86,6 @@
       margin-bottom: 16px;
     }
 
-    /* 질문 카드 스타일 – 푸망 카드 느낌 */
     .card {
       border-radius: 16px;
       border: 1px solid rgba(201, 203, 230, 0.7);
@@ -132,7 +128,6 @@
       box-shadow: 0 2px 6px rgba(25, 37, 101, 0.08);
     }
 
-    /* 버튼 – 동그랗고 살짝 떠오르는 느낌 */
     .button-row {
       display: flex;
       justify-content: center;
@@ -169,7 +164,6 @@
       filter: brightness(0.98);
     }
 
-    /* 결과 박스 – 부드럽게 fade-in */
     #resultBox {
       margin-top: 10px;
       padding: 12px 12px 12px;
@@ -274,10 +268,12 @@
       </div>
       <h1>Which Greek Tragic Figure Are You?</h1>
       <p class="subtitle">
-        A small <span>fate test</span> whispered by the gods and shaped by the trials of ancient heroes. Select the choices that <span>mirror your instincts</span> in conflict, devotion, and moments of no return. 
+        A small <span>fate test</span> whispered by the gods and shaped by the trials of ancient heroes. Select the choices that <span>mirror your instincts</span> in conflict, devotion, and moments of no return.
+      </p>
 
       <form id="fateForm">
         <div class="question-scroll">
+          <!-- 질문들 그대로 유지 -->
           <!-- Q1 -->
           <div class="card">
             <h2>1. When a serious problem appears in your life, what is your first instinct?</h2>
@@ -340,7 +336,7 @@
             <h2>4. What kind of ending feels strangely “right” to you, even if it isn’t happy?</h2>
             <div class="options">
               <label><input type="radio" name="q4" value="Oedipus" required>
-                <span>A tragic ending where at least the truth is finally ed.</span>
+                <span>A tragic ending where at least the truth is finally revealed.</span>
               </label>
               <label><input type="radio" name="q4" value="Agamemnon">
                 <span>An ending where my name and deeds are remembered, even if I die.</span>
@@ -444,6 +440,14 @@
             <p id="characterTagline"></p>
           </div>
         </div>
+
+        <!-- ✨ 결과 이미지 자리 -->
+        <img
+          id="characterImage"
+          style="width:100%; border-radius:16px; margin:10px 0; display:none;"
+          alt="Greek tragic figure illustration"
+        >
+
         <p id="characterText"></p>
         <div id="characterTraits" class="trait-chips"></div>
       </div>
@@ -462,7 +466,7 @@
         tagline: "The type who digs too deep into the truth until they suddenly realize, “Wait, I didn't know that?”",
         description:
           "Like Oedipus, you are drawn to the truth, even when it is dangerous or painful. In Greek tragedy, his determination to solve the riddle of Thebes reveals that he himself is the source of the city’s pollution, turning knowledge into catastrophe.",
-        traits: ["Truth-obsessed", "Self-inquiry", "Moral responsibility", "Refuses easy answers"]
+        traits: ["Truth-obsessed", "Self-inquiry", "Moral responsibility", "Refuses easy answers"],
         image: "Oedipus.jpg"
       },
       Agamemnon: {
@@ -471,7 +475,7 @@
         tagline: "The type where things seem to be going smoothly until suddenly, at the very end, the difficulty spikes to hell.",
         description:
           "You think in terms of duty, sacrifice, and reputation. In myth, Agamemnon chooses war and honour over his own daughter’s life; this decision wins him kleos on the battlefield but destroys him within his own household.",
-        traits: ["Duty-driven", "Reputation-conscious", "Strategic but rigid", "Carries heavy burdens", "Sacrifice", "Authority"]
+        traits: ["Duty-driven", "Reputation-conscious", "Strategic but rigid", "Carries heavy burdens", "Sacrifice", "Authority"],
         image: "agamemnon.jpg"
       },
       Medea: {
@@ -480,7 +484,7 @@
         tagline: "The type who needs a warning sign that says, “Just don't betray. Really, don't.”",
         description:
           "Your loyalty runs deep, and so does your rage when that loyalty is betrayed. Medea’s metis, her cunning intelligence, allows her to punish Jason in ways that terrify both her enemies and the audience, exposing ancient anxieties about powerful women.",
-        traits: ["Intense loyalty", "Dangerous when wronged", "Metis (cunning intelligence)", "Emotionally uncompromising"]
+        traits: ["Intense loyalty", "Dangerous when wronged", "Metis (cunning intelligence)", "Emotionally uncompromising"],
         image: "Medea-Sandys.jpg"
       },
       Odysseus: {
@@ -489,7 +493,7 @@
         tagline: "A wanderer who enjoys even the journey home in RPG hard mode.",
         description:
           "You rely on metis: cleverness, flexibility, and survival instinct. Like Odysseus, you adapt to each situation with new identities and stories, but this constant strategy also complicates your nostos, your relationships, and how others remember you.",
-        traits: ["Adaptive", "Storyteller", "Survivor mindset", "Strategic ambiguity"]
+        traits: ["Adaptive", "Storyteller", "Survivor mindset", "Strategic ambiguity"],
         image: "Odysseus.jpg"
       }
     };
@@ -526,6 +530,7 @@
       const taglineP = document.getElementById('characterTagline');
       const textP = document.getElementById('characterText');
       const traitsDiv = document.getElementById('characterTraits');
+      const imageEl = document.getElementById('characterImage');
 
       const dataForChar = characterData[bestChar];
 
@@ -536,6 +541,14 @@
       traitsDiv.innerHTML = dataForChar.traits
         .map(trait => `<span class="chip">${trait}</span>`)
         .join("");
+
+      // 이미지 설정
+      if (dataForChar.image) {
+        imageEl.src = dataForChar.image;
+        imageEl.style.display = "block";
+      } else {
+        imageEl.style.display = "none";
+      }
 
       resultBox.style.display = 'block';
       setTimeout(() => {
